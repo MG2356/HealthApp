@@ -5,20 +5,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Screens
-import SplashScreen from "./SplashScreen";
-import LoginScreen from "./LoginScreen";
-import RegisterScreen from "./RegisterScreen";
-import HomeScreen from "./HomeScreen";
-import OrdersScreen from "./OrdersScreen";
-import PrescriptionScreen from "./PrescriptionScreen";
-import ChatScreen from "./ChatScreen";
-import MGScreen from "./MGScreen";
+import SplashScreen from "./Component/SplashScreen";
+import LoginScreen from "./Authentication/LoginScreen";
+import RegisterScreen from "./Authentication/RegisterScreen";
+import HomeScreen from "./Component/HomeScreen";
+import OrdersScreen from "./Component/OrdersScreen";
+import PrescriptionScreen from "./Component/PrescriptionScreen";
+import ChatScreen from "./Component/ChatScreen";
+import OtpScreen from "./Authentication/OtpScreen";
+import ProfileScreen from "./Component/ProfileScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Bottom Tab Navigator
 function BottomTabs() {
   return (
     <Tab.Navigator
@@ -41,7 +40,8 @@ function BottomTabs() {
             iconName = focused ? "document-text" : "document-text-outline";
           else if (route.name === "Chat")
             iconName = focused ? "chatbubbles" : "chatbubbles-outline";
-
+          else if (route.name === "Profile")
+            iconName = focused ? "person-circle" : "person-circle-outline"; 
           return (
             <Ionicons
               name={iconName}
@@ -56,6 +56,8 @@ function BottomTabs() {
       <Tab.Screen name="Orders" component={OrdersScreen} />
       <Tab.Screen name="Prescription" component={PrescriptionScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+
     </Tab.Navigator>
   );
 }
@@ -73,34 +75,28 @@ export default function App() {
     checkLogin();
   }, []);
 
-  if (loading) return null; // you can return <SplashScreen /> if needed
+  if (loading) return null; 
 
   return (
     <NavigationContainer>
-      
 
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Always show splash first */}
+
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         {userToken ? (
-          // If logged in → show bottom tabs
           <Stack.Screen name="MainApp" component={BottomTabs} />
         ) : (
-          // Else show login/register
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="MGscreen" component={MGScreen} />
-                  <Stack.Screen name="MainApp" component={BottomTabs} />
-
-
-            {/* <Stack.Screen name="MainApp" component={BottomTabs} /> */}
+            <Stack.Screen name="MainApp" component={BottomTabs} />
+            <Stack.Screen name="OtpScreen" component={OtpScreen} />
 
           </>
         )}
       </Stack.Navigator>
 
-      
+
     </NavigationContainer>
   );
 }
